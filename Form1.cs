@@ -41,7 +41,6 @@ namespace FileSizes
                 path.Substring(0, path.LastIndexOf('\\') - 1);
             Folder rootFolder = new Folder(folderName, path);
             rootFolder.calculateSizes();
-            textFilePath.Text = reformatSize(rootFolder.TotalSize);
 
             populateData(rootFolder);
         }

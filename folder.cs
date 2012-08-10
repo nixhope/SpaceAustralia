@@ -65,7 +65,10 @@ namespace FileSizes
                         FileAttributes.ReparsePoint) !=
                         FileAttributes.ReparsePoint)
                     {
-                        Folder newFolder = new Folder(subDirectory, System.IO.Path.Combine(Path, subDirectory));
+                        string folderName = (subDirectory.LastIndexOf('\\') + 1 < subDirectory.Length) ?
+                            subDirectory.Substring(subDirectory.LastIndexOf('\\') + 1) :
+                            subDirectory.Substring(0, subDirectory.LastIndexOf('\\') - 1);
+                        Folder newFolder = new Folder(folderName, subDirectory);
                         newFolder.calculateSizes();
                         TotalSize += newFolder.TotalSize;
                         // Store the new folder in its parent's subdirectory list

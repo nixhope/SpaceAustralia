@@ -36,8 +36,9 @@ namespace FileSizes
         private void buttonAnalyse_Click(object sender, EventArgs e)
         {
             string path = textFilePath.Text;
-            string[] parts = path.Split('\\');
-            string folderName = parts[parts.Length-1];
+            string folderName = (path.LastIndexOf('\\') + 1 < path.Length) ? 
+                path.Substring(path.LastIndexOf('\\') + 1) : 
+                path.Substring(0, path.LastIndexOf('\\') - 1);
             Folder rootFolder = new Folder(folderName, path);
             rootFolder.calculateSizes();
             textFilePath.Text = reformatSize(rootFolder.TotalSize);

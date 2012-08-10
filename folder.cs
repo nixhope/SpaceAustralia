@@ -2,48 +2,80 @@
 using System.IO;
 using System.Collections.Generic;
 
-public class Folder
+namespace FileSizes
 {
-    public string Name { get; private set; }
-    public string Path { get; private set; }
-    public long TotalSize { get; private set; }
-    public long FileSize { get; private set; }
-    public List<Folder> Subdirectories;
-
-	public Folder(string name, string path)
-	{
-        Name = name;
-        Path = path;
-        Subdirectories = new List<Folder>();
-        FileSize = 0;
-	}
-
-    public void calculateSizes()
+    public class Folder
     {
-        string[] files = Directory.GetFiles(Path);
-        string[] subDirectories = Directory.GetDirectories(Path);
+        public string Name { get; private set; }
+        public string Path { get; private set; }
+        public long TotalSize { get; private set; }
+        public long FileSize { get; private set; }
+        public List<Folder> Subdirectories;
 
-        foreach (string file in files)
+        // Initialise folder with foldername and path
+        public Folder(string name, string path)
         {
-            FileSize += new FileInfo(file).Length;
+            Name = name;
+            Path = path;
+            Subdirectories = new List<Folder>();
+            FileSize = 0;
+            TotalSize = 0;
         }
 
-        // Iterate through the sub folders
-        foreach (string subDirectory in subDirectories)
+        // Calculate the file sizes and total sizes
+        public void calculateSizes()
         {
-            // Do not iterate through reparse points
-            if ((File.GetAttributes(subDirectory) &
-                FileAttributes.ReparsePoint) !=
-                FileAttributes.ReparsePoint)
+            string[] files = null;
+            string[] subDirectories = null;
+
+            try
             {
-                Folder newFolder = new Folder(subDirectory, System.IO.Path.Combine(Path, subDirectory));
-                newFolder.calculateSizes();
-                TotalSize += newFolder.TotalSize;
-                Subdirectories.Add(newFolder);
+                files = Directory.GetFiles(Path);
+                subDirectories = Directory.GetDirectories(Path);
             }
+            catch (UnauthorizedAccessException e)
+            {
+                // For now, just console log inaccessible files (later create a proper log)
+                System.Diagnostics.Debug.Write(e.Message);
+            }
+            catch (System.IO.DirectoryNotFoundException e)
+            {
+                System.Diagnostics.Debug.Write(e.Message);
+            }
+
+            if (files != null)
+            {
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        FileSize += new FileInfo(file).Length;
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        System.Diagnostics.Debug.Write(e.Message);
+                    }
+                }
+
+                // Iterate through the sub folders
+                foreach (string subDirectory in subDirectories)
+                {
+                    // Do not iterate through reparse points
+                    if ((File.GetAttributes(subDirectory) &
+                        FileAttributes.ReparsePoint) !=
+                        FileAttributes.ReparsePoint)
+                    {
+                        Folder newFolder = new Folder(subDirectory, System.IO.Path.Combine(Path, subDirectory));
+                        newFolder.calculateSizes();
+                        TotalSize += newFolder.TotalSize;
+                        // Store the new folder in its parent's subdirectory list
+                        Subdirectories.Add(newFolder);
+                    }
+                }
+            }
+
+            TotalSize += FileSize;
         }
 
-        TotalSize += FileSize;
     }
-
 }

@@ -31,6 +31,8 @@
             this.buttonFileBrowse = new System.Windows.Forms.Button();
             this.textFilePath = new System.Windows.Forms.TextBox();
             this.buttonAnalyse = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonFileBrowse
@@ -61,16 +63,27 @@
             this.buttonAnalyse.UseVisualStyleBackColor = true;
             this.buttonAnalyse.Click += new System.EventHandler(this.buttonAnalyse_Click);
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(13, 42);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(759, 508);
+            this.dataGridView1.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.buttonAnalyse);
             this.Controls.Add(this.textFilePath);
             this.Controls.Add(this.buttonFileBrowse);
             this.Name = "Form1";
             this.Text = "Folder size analyser";
+            this.Resize += new System.EventHandler(this.Form1_Resize);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -81,6 +94,7 @@
         private System.Windows.Forms.Button buttonFileBrowse;
         private System.Windows.Forms.TextBox textFilePath;
         private System.Windows.Forms.Button buttonAnalyse;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }
 
